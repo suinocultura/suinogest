@@ -1,0 +1,54 @@
+INSTRUÇÕES PARA DEPLOY DO SISTEMA SUINOCULTURA
+=============================================
+
+DEPLOY NO REPLIT (PRINCIPAL)
+-----------------------------
+1. Certifique-se de que o servidor Streamlit está configurado corretamente
+   - Porta: 5000
+   - Configurações em .streamlit/config.toml
+   
+2. Clique no botão "Run" no Replit
+   O sistema estará disponível em: https://suinocultura.replit.app
+
+3. Para deploy permanente, use o botão "Deploy" no Replit
+   - Isso garante que o aplicativo continue rodando mesmo quando o Replit não estiver aberto
+
+
+DEPLOY NO FIREBASE (LANDING PAGE E DOWNLOAD)
+-------------------------------------------
+Para instruções detalhadas sobre o deploy no Firebase, consulte o arquivo:
+README_DEPLOY.md
+
+Resumo dos passos:
+1. Criar projeto no Firebase Console (https://console.firebase.google.com/)
+2. Fazer login no Firebase via terminal: npx firebase login
+3. Executar o build: node build-firebase.js
+4. Fazer o deploy: npx firebase deploy
+
+
+DEPLOY NO STREAMLIT CLOUD (ALTERNATIVA)
+--------------------------------------
+1. Para fazer deploy no Streamlit Cloud, use o script:
+   python prepare_streamlit_cloud.py
+   
+2. Siga as instruções geradas para fazer o upload no GitHub
+   - Use o script: python github_deploy.py
+   
+3. No Streamlit Cloud, conecte seu repositório GitHub
+   - Configure o arquivo main como app.py
+   - Defina os secrets necessários
+
+
+CRIAÇÃO DO APK ANDROID
+---------------------
+1. Na página "99_📥_Download_Aplicativo", clique em uma das opções para gerar o APK
+2. Baixe e instale o APK gerado em dispositivos Android
+3. Para incluir o APK no Firebase, copie-o para a pasta build/ e faça novo deploy
+
+
+OBSERVAÇÕES IMPORTANTES
+---------------------
+- Recomenda-se manter o deploy principal no Replit
+- O Firebase é usado principalmente para a landing page e download do APK
+- O Streamlit Cloud pode ser usado como backup ou alternativa
+- Alterações no código devem ser sincronizadas com todos os ambientes manualmente

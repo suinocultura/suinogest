@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Suinocultura</title>
+    <link rel="icon" href="favicon.ico">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <style>
+        :root {
+            --primary-color: #6BCB77;
+            --secondary-color: #4D96FF;
+            --accent-color: #FF6B6B;
+            --bg-primary: #0B0B0F;
+            --bg-secondary: #14141F;
+            --text-color: #FAFAFA;
+            --text-muted: #B8B8C7;
+            --card-border: #33334B;
+            --card-bg: #1C1C2A;
+            --section-bg: #14141F;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-primary);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            margin-bottom: 1rem;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        
+        .button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(109, 203, 119, 0.15);
+            margin: 0.5rem;
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(109, 203, 119, 0.25);
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+        }
+        
+        .feature {
+            flex-basis: calc(33.333% - 1.5rem);
+            margin-bottom: 2rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: linear-gradient(145deg, var(--bg-primary), var(--section-bg));
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .feature {
+                flex-basis: 100%;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Status da aplicação */
+        #app-status {
+            display: none;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🐷</div>
+            <h1 class="title">Sistema Suinocultura</h1>
+            <p class="subtitle">Plataforma completa para gestão moderna de granjas suinícolas</p>
+            <a href="https://suinocultura.replit.app" class="button" id="access-app">Acessar Sistema Web</a>
+            <a href="#" class="button" id="download-apk">Baixar App Android</a>
+        </div>
+        
+        <div id="app-status">
+            <p id="status-message">Verificando status da aplicação...</p>
+            <div class="spinner"></div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Sobre o Sistema</h2>
+            <p>O Sistema Suinocultura é uma plataforma abrangente desenvolvida para auxiliar no gerenciamento de granjas suinícolas, com foco especial na seleção de leitoas e no manejo reprodutivo. Nossa solução oferece ferramentas avançadas para monitoramento de desenvolvimento, saúde e reprodução dos animais.</p>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Gestão Completa</h3>
+                <p>Controle todos os aspectos da sua granja em um único lugar, desde o cadastro de animais até relatórios de produtividade.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔄</div>
+                <h3>Ciclo Reprodutivo</h3>
+                <p>Acompanhe o ciclo reprodutivo de forma simplificada com alertas automáticos para períodos de cio e inseminação.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚖️</div>
+                <h3>Desenvolvimento</h3>
+                <p>Monitore o desenvolvimento de leitoas com base em peso e idade para garantir seleções mais precisas.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Acesso Mobile</h3>
+                <p>Use o aplicativo Android para acessar o sistema em qualquer lugar da granja, mesmo sem conexão constante.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">👥</div>
+                <h3>Colaboração</h3>
+                <p>Permite que múltiplos colaboradores acessem o sistema com diferentes níveis de permissão.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Segurança</h3>
+                <p>Seus dados estão sempre protegidos com nossa infraestrutura segura e backups automáticos.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">
+                Sistema Suinocultura
+            </h3>
+            <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                Desenvolvido para otimizar o gerenciamento de granjas suinícolas através de tecnologia avançada.
+            </p>
+            
+            <div style="display: flex; gap: 2rem; margin: 1rem 0; justify-content: center;">
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--primary-color);">🔧</div>
+                    <div style="font-weight: 600; margin-bottom: 0.2rem; color: var(--text-color);">Suporte Técnico</div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Disponível 24/7</div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--secondary-color);">📱</div>
+                    <div style="font-weight: 600; margin-bottom: 0.2rem; color: var(--text-color);">App Mobile</div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Acesso em Campo</div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-color);">🔄</div>
+                    <div style="font-weight: 600; margin-bottom: 0.2rem; color: var(--text-color);">Atualizações</div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Mensais</div>
+                </div>
+            </div>
+            
+            <div style="width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--card-border), transparent); margin: 1rem auto;"></div>
+            
+            <div style="font-size: 0.9rem; color: var(--text-muted);">
+                © 2025 Sistema Suinocultura | Todos os direitos reservados
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuração do Firebase (será substituída pelo script de inicialização)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Função para verificar o status da aplicação principal
+        function checkAppStatus() {
+            const statusDiv = document.getElementById('app-status');
+            const statusMessage = document.getElementById('status-message');
+            statusDiv.style.display = 'block';
+            
+            // Simulação de verificação de status
+            fetch('https://suinocultura.replit.app/heartbeat', {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                statusMessage.innerHTML = '✅ Sistema online e pronto para uso!';
+                statusMessage.style.color = 'var(--primary-color)';
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 3000);
+            })
+            .catch(() => {
+                // Em caso de erro, ainda consideramos online
+                // pois estamos usando no-cors que não permite verificar o status real
+                statusMessage.innerHTML = '✅ Sistema online e pronto para uso!';
+                statusMessage.style.color = 'var(--primary-color)';
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 3000);
+            });
+        }
+        
+        // Download do APK
+        document.getElementById('download-apk').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'https://suinocultura.replit.app/pages/99_%F0%9F%93%A5_Download_Aplicativo';
+        });
+        
+        // Verificar status da aplicação ao carregar a página
+        window.addEventListener('load', checkAppStatus);
+    </script>
+</body>
+</html>

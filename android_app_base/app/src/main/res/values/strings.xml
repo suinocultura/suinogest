@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Suinocultura</string>
+    <string name="loading">Carregando...</string>
+    <string name="error_connection">Erro de conexão</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="offline_title">Sem conexão com a Internet</string>
+    <string name="offline_message">O Sistema de Gestão Suinocultura precisa de conexão com a Internet para funcionar.</string>
+    <string name="offline_submessage">Por favor, verifique sua conexão e tente novamente.</string>
+    <string name="last_update">Última atualização: %1$s</string>
+    <string name="never_synced">Nunca sincronizado</string>
+    <string name="refresh">Atualizar</string>
+    <string name="about">Sobre o aplicativo</string>
+    <string name="about_title">Sobre o aplicativo</string>
+    <string name="about_message">Sistema de Gestão Suinocultura\nVersão 2.1 (2025)\n\nEste aplicativo oferece acesso ao sistema completo de gestão para suinocultura, incluindo controle de animais, ciclos reprodutivos, alimentação, saúde e relatórios.\n\nNovidades na versão 2.1:\n• Suporte à integração com GitHub\n• Visualização destacada de notas importantes\n• Histórico de atualizações completo</string>
+    <string name="exit_title">Sair do aplicativo</string>
+    <string name="exit_message">Deseja realmente sair do Sistema Suinocultura?</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="ok">OK</string>
+    <string name="reload">Recarregar</string>
+    <string name="settings">Configurações</string>
+    <string name="updates_history">Histórico de Atualizações</string>
+    <string name="updates_title">Atualizações do Sistema</string>
+    <string name="about_title">Sobre o aplicativo</string>
+</resources>

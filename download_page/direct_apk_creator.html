@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de APK WebView Nativo - Sistema Suinocultura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        h1 {
+            color: #E53935;
+            text-align: center;
+            border-bottom: 2px solid #E53935;
+            padding-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #E53935;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #D32F2F;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        .note {
+            background-color: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            padding: 10px;
+            margin: 15px 0;
+        }
+        .badge {
+            background-color: #E53935;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador de APK WebView Nativo <span class="badge">NOVO!</span></h1>
+        <p>Use este assistente para criar um APK Android nativo para o Sistema Suinocultura usando WebView de alta performance.</p>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'tab1')">Método Online</div>
+            <div class="tab" onclick="openTab(event, 'tab2')">Método Android Studio</div>
+            <div class="tab" onclick="openTab(event, 'tab3')">Comparação</div>
+        </div>
+        
+        <div id="tab1" class="tab-content active">
+            <div class="card">
+                <h3>Método Online (Recomendado)</h3>
+                <p>Este método não requer instalação de ferramentas de desenvolvimento e pode ser usado diretamente de qualquer dispositivo com acesso à internet.</p>
+                
+                <form action="https://gonative.io/free-app" method="get" target="_blank">
+                    <input type="hidden" name="url" value="https://workspace.ruanlouco231.repl.co">
+                    
+                    <div class="input-group">
+                        <label for="appName">Nome do aplicativo:</label>
+                        <input type="text" id="appName" name="appName" value="Sistema Suinocultura" readonly>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="colorPrimary">Cor principal:</label>
+                        <input type="color" id="colorPrimary" name="colorPrimary" value="#4CAF50">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="language">Idioma:</label>
+                        <select id="language" name="language">
+                            <option value="pt" selected>Português</option>
+                            <option value="en">Inglês</option>
+                            <option value="es">Espanhol</option>
+                        </select>
+                    </div>
+                    
+                    <div class="note">
+                        <p><strong>Nota:</strong> O APK gerado será enviado para seu e-mail após a criação.</p>
+                    </div>
+                    
+                    <button type="submit" class="btn">CRIAR APK AGORA</button>
+                </form>
+            </div>
+        </div>
+        
+        <div id="tab2" class="tab-content">
+            <div class="card">
+                <h3>Método Android Studio</h3>
+                <p>Para desenvolvedores que desejam personalizar ainda mais o aplicativo.</p>
+                
+                <ol>
+                    <li>
+                        <strong>Baixe o projeto base:</strong>
+                        <a href="https://workspace.ruanlouco231.repl.co/download_page/android_webview_project.zip" class="btn" style="width: auto; margin: 10px 0;">Baixar Projeto Android</a>
+                    </li>
+                    <li>
+                        <strong>Abra o projeto no Android Studio:</strong>
+                        <p>Importe o projeto baixado usando a opção "Import Project" no Android Studio.</p>
+                    </li>
+                    <li>
+                        <strong>Personalize conforme necessário:</strong>
+                        <p>Você pode modificar ícones, cores, temas e outras configurações no projeto.</p>
+                    </li>
+                    <li>
+                        <strong>Compile o APK:</strong>
+                        <p>Use a opção "Build > Build Bundle(s) / APK(s) > Build APK(s)" no Android Studio.</p>
+                    </li>
+                </ol>
+                
+                <div class="note">
+                    <p><strong>Importante:</strong> Este método requer conhecimentos básicos de desenvolvimento Android.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab3" class="tab-content">
+            <h3>Comparação dos Métodos</h3>
+            
+            <table>
+                <tr>
+                    <th>Característica</th>
+                    <th>Método Online</th>
+                    <th>Método Android Studio</th>
+                </tr>
+                <tr>
+                    <td>Facilidade</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>Personalização</td>
+                    <td>⭐⭐⭐</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>Tempo necessário</td>
+                    <td>5 minutos</td>
+                    <td>30+ minutos</td>
+                </tr>
+                <tr>
+                    <td>Conhecimento técnico</td>
+                    <td>Nenhum</td>
+                    <td>Intermediário</td>
+                </tr>
+                <tr>
+                    <td>Recursos do aplicativo</td>
+                    <td>Básicos</td>
+                    <td>Avançados</td>
+                </tr>
+            </table>
+            
+            <div class="note">
+                <p><strong>Recomendação:</strong> Para a maioria dos usuários, o Método Online é a melhor opção. Use o Método Android Studio apenas se precisar de personalizações avançadas.</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <h3>Perguntas Frequentes</h3>
+            
+            <div class="card">
+                <p><strong>O aplicativo funciona offline?</strong></p>
+                <p>O aplicativo requer conexão com a internet para acessar o Sistema Suinocultura. Porém, ele implementa cache para melhorar a performance e permitir navegação limitada offline.</p>
+            </div>
+            
+            <div class="card">
+                <p><strong>Como instalar o APK no Android?</strong></p>
+                <p>Após baixar o APK, toque nele para instalá-lo. Você precisará permitir a instalação de "Fontes desconhecidas" nas configurações de segurança do seu dispositivo.</p>
+            </div>
+            
+            <div class="card">
+                <p><strong>Este método é melhor que o método Kivy?</strong></p>
+                <p>Este método é mais confiável e funciona em mais dispositivos que o método Kivy/Buildozer. Ele é recomendado para a maioria dos usuários devido à sua simplicidade e compatibilidade.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
+</html>

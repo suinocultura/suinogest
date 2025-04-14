@@ -1,0 +1,655 @@
+#:kivy 2.1.0
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import Gradient kivy.garden.gradient
+#:import Window kivy.core.window.Window
+
+# Definindo esquema de cores moderno do aplicativo
+#:set COR_PRIMARIA "#6200EA"  # Roxo profundo - cor principal
+#:set COR_SECUNDARIA "#3700B3"  # Roxo escuro - ações secundárias
+#:set COR_ACENTO "#03DAC6"  # Verde água - destaques
+#:set COR_ERRO "#CF6679"  # Rosa - erros e alertas
+#:set COR_FUNDO "#121212"  # Cinza escuro - fundo do app
+#:set COR_SUPERFICIE "#1E1E1E"  # Cinza um pouco mais claro - superfícies
+#:set COR_TEXTO_PRIMARIO "#FFFFFF"  # Branco - texto principal
+#:set COR_TEXTO_SECUNDARIO "#B0B0B0"  # Cinza claro - texto secundário
+
+# Cores antigas para compatibilidade com código existente
+#:set ROXO_PRIMARIO COR_PRIMARIA
+#:set ROXO_ESCURO COR_SECUNDARIA
+#:set ROXO_CLARO "#BB86FC"  # Roxo mais claro
+#:set CINZA_CLARO "#2D2D2D"  # Cinza escuro para tema escuro
+#:set CINZA_ESCURO "#D0D0D0"  # Texto cinza claro
+#:set BRANCO COR_TEXTO_PRIMARIO
+
+# Componentes reutilizáveis com design de Material Design
+<CustomButton@Button>:
+    background_normal: ''
+    background_color: get_color_from_hex(COR_PRIMARIA) if self.state == 'normal' else get_color_from_hex(COR_SECUNDARIA)
+    color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+    size_hint_y: None
+    height: dp(56)
+    font_size: dp(18)
+    # Efeito de sombra
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0.2
+        RoundedRectangle:
+            pos: self.x + dp(2), self.y - dp(2)
+            size: self.width, self.height
+            radius: [dp(8)]
+    # Efeito de ripple (círculo que se expande ao clicar)
+    on_press: 
+        self.background_color = get_color_from_hex(COR_SECUNDARIA)
+    on_release: 
+        self.background_color = get_color_from_hex(COR_PRIMARIA)
+    
+<ElevatedButton@Button>:
+    background_normal: ''
+    background_color: get_color_from_hex(COR_ACENTO)
+    color: get_color_from_hex(COR_FUNDO)
+    size_hint_y: None
+    height: dp(48)
+    font_size: dp(16)
+    bold: True
+    # Efeito de sombra mais pronunciado
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0.3
+        RoundedRectangle:
+            pos: self.x + dp(3), self.y - dp(3)
+            size: self.width, self.height
+            radius: [dp(24)]  # Botão mais arredondado
+    
+<MenuButton@Button>:
+    background_normal: ''
+    background_color: get_color_from_hex(COR_SUPERFICIE)
+    color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+    size_hint_y: None
+    height: dp(60)
+    font_size: dp(16)
+    halign: 'left'
+    valign: 'middle'
+    text_size: self.width - dp(30), None
+    padding_x: dp(15)
+    # Ícone à esquerda (placeholder - será adicionado por código)
+    # Efeito de ripple suave
+    on_press: 
+        self.background_color = get_color_from_hex(COR_PRIMARIA) 
+        self.opacity = 0.85
+    on_release: 
+        self.background_color = get_color_from_hex(COR_SUPERFICIE)
+        self.opacity = 1.0
+    
+<CustomTextInput@TextInput>:
+    multiline: False
+    size_hint_y: None
+    height: dp(56)
+    padding: [dp(20), dp(15), dp(20), dp(15)]
+    background_normal: ''
+    background_active: ''
+    background_color: get_color_from_hex("#2A2A2A")  # Fundo um pouco mais claro que o fundo principal
+    foreground_color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+    cursor_color: get_color_from_hex(COR_ACENTO)
+    font_size: dp(16)
+    hint_text_color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+    # Borda inferior com destaque ao focar
+    canvas.after:
+        Color:
+            rgba: get_color_from_hex(COR_ACENTO) if self.focus else get_color_from_hex(COR_TEXTO_SECUNDARIO)
+        Line:
+            points: self.x, self.y, self.x + self.width, self.y
+            width: dp(2) if self.focus else dp(1)
+
+<TitleLabel@Label>:
+    font_size: dp(28)
+    color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+    size_hint_y: None
+    height: dp(56)
+    font_name: 'Roboto-Bold'  # Seria necessário adicionar a fonte Roboto
+    # Efeito de brilho sublinhado
+    canvas.after:
+        Color:
+            rgba: get_color_from_hex(COR_ACENTO)
+        Line:
+            points: self.x, self.y, self.x + self.width * 0.3, self.y
+            width: dp(3)
+    
+<SubtitleLabel@Label>:
+    font_size: dp(22)
+    color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+    size_hint_y: None
+    height: dp(46)
+    bold: True
+    
+<InfoLabel@Label>:
+    font_size: dp(16)
+    color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+    text_size: self.width, None
+    halign: 'left'
+    size_hint_y: None
+    height: dp(36)
+    padding: [dp(10), dp(5)]
+
+<AnimalCard@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: dp(160)
+    padding: dp(16)
+    spacing: dp(8)
+    # Fundo com gradiente e sombra
+    canvas.before:
+        # Sombra
+        Color:
+            rgba: 0, 0, 0, 0.4
+        RoundedRectangle:
+            pos: self.x + dp(3), self.y - dp(3)
+            size: self.width, self.height
+            radius: [dp(10)]
+        # Fundo do card
+        Color:
+            rgba: get_color_from_hex(COR_SUPERFICIE)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(10)]
+        # Borda superior com cor de destaque
+        Color:
+            rgba: get_color_from_hex(COR_ACENTO)
+        Line:
+            points: [self.x, self.y + self.height - dp(2), self.x + self.width, self.y + self.height - dp(2)]
+            width: dp(4)
+            cap: 'round'
+
+<StatusBadge@Label>:
+    size_hint: None, None
+    size: dp(80), dp(24)
+    font_size: dp(12)
+    bold: True
+    color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+    halign: 'center'
+    valign: 'middle'
+    canvas.before:
+        Color:
+            rgba: get_color_from_hex(COR_ACENTO)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+
+<UserBox@BoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: dp(90)
+    padding: dp(16)
+    spacing: dp(8)
+    canvas.before:
+        # Fundo com gradiente suave
+        Color:
+            rgba: get_color_from_hex(COR_PRIMARIA)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]
+        
+        # Efeito de padrão sutil
+        Color:
+            rgba: 1, 1, 1, 0.05
+        Line:
+            rectangle: [self.x, self.y, self.width, self.height]
+            width: dp(1)
+            dash_offset: 5
+            dash_length: 10
+
+# Tela de Login com tema escuro moderno
+<LoginScreen>:
+    canvas.before:
+        # Fundo gradiente da tela de login
+        Color:
+            rgba: get_color_from_hex(COR_FUNDO)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(20)
+        
+        # Espaço superior
+        Widget:
+            size_hint_y: 0.1
+        
+        # Logo do aplicativo
+        Image:
+            source: 'assets/logo_placeholder.png'
+            size_hint: None, None
+            size: dp(200), dp(200)
+            pos_hint: {'center_x': 0.5}
+        
+        # Subtítulo
+        Label:
+            text: 'Sistema de Gestão Suinocultura'
+            font_size: dp(20)
+            color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+            size_hint_y: None
+            height: dp(40)
+            halign: 'center'
+            
+        # Área de login
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {'center_x': 0.5}
+            size_hint_x: 0.8
+            
+            # Efeito de cartão elevado
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 0.3
+                RoundedRectangle:
+                    pos: self.x + dp(5), self.y - dp(5)
+                    size: self.width, self.height
+                    radius: [dp(15)]
+                Color:
+                    rgba: get_color_from_hex(COR_SUPERFICIE)
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(15)]
+            
+            # Título do card
+            Label:
+                text: 'Login'
+                font_size: dp(24)
+                color: get_color_from_hex(COR_ACENTO)
+                size_hint_y: None
+                height: dp(60)
+                pos_hint: {'center_x': 0.5}
+                
+            # Campos de login com ícones
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: dp(20)
+                padding: dp(20)
+                size_hint_y: None
+                height: self.minimum_height
+                
+                # Campo de usuário
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(56)
+                    spacing: dp(10)
+                    
+                    # Ícone (simulado com Label)
+                    Label:
+                        text: '👤'
+                        font_size: dp(24)
+                        size_hint_x: None
+                        width: dp(40)
+                        color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+                    
+                    # Campo de texto
+                    CustomTextInput:
+                        id: username_input
+                        hint_text: 'Usuário'
+                        size_hint_y: None
+                        height: dp(56)
+                        
+                # Campo de senha
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(56)
+                    spacing: dp(10)
+                    
+                    # Ícone (simulado com Label)
+                    Label:
+                        text: '🔒'
+                        font_size: dp(24)
+                        size_hint_x: None
+                        width: dp(40)
+                        color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+                    
+                    # Campo de texto
+                    CustomTextInput:
+                        id: password_input
+                        hint_text: 'Senha'
+                        password: True
+                        size_hint_y: None
+                        height: dp(56)
+                
+                # Mensagem de erro (inicialmente vazia)
+                Label:
+                    id: error_label
+                    text: ''
+                    color: get_color_from_hex(COR_ERRO)
+                    size_hint_y: None
+                    height: dp(30) if self.text else 0
+                    opacity: 1 if self.text else 0
+                
+                # Botão de login com ripple animation
+                CustomButton:
+                    text: 'ENTRAR'
+                    font_size: dp(18)
+                    bold: True
+                    height: dp(56)
+                    on_release: root.login()
+                
+                # Opção para trabalhar offline
+                CheckBox:
+                    id: offline_checkbox
+                    size_hint: None, None
+                    size: dp(30), dp(30)
+                    pos_hint: {'center_x': 0.1}
+                    active: True
+                
+                Label:
+                    text: 'Trabalhar offline'
+                    color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+                    size_hint_y: None
+                    height: dp(30)
+                    pos_hint: {'center_x': 0.5}
+        
+        # Espaço inferior
+        Widget:
+            size_hint_y: 0.15
+            
+        # Rodapé
+        Label:
+            text: 'Sistema Suinocultura © 2025'
+            font_size: dp(12)
+            color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+            size_hint_y: None
+            height: dp(30)
+
+# Tela principal com navegação aprimorada
+<MainScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # Barra superior
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(60)
+            padding: dp(10)
+            spacing: dp(10)
+            canvas.before:
+                Color:
+                    rgba: get_color_from_hex(COR_PRIMARIA)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            # Botão de menu (hamburguer)
+            Button:
+                text: '≡'
+                font_size: dp(24)
+                size_hint_x: None
+                width: dp(50)
+                background_normal: ''
+                background_color: get_color_from_hex(COR_PRIMARIA)
+                color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+                on_release: app.toggle_menu()
+            
+            # Título da página atual
+            Label:
+                text: 'Sistema Suinocultura'
+                font_size: dp(20)
+                color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+                text_size: self.width, None
+                halign: 'left'
+                valign: 'middle'
+            
+            # Indicador de status de sincronização
+            Label:
+                id: sync_status
+                text: '🔄'
+                font_size: dp(20)
+                size_hint_x: None
+                width: dp(40)
+                color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+        
+        # Container principal (menu lateral + conteúdo)
+        BoxLayout:
+            orientation: 'horizontal'
+            
+            # Menu lateral (inicialmente oculto)
+            BoxLayout:
+                id: side_menu
+                orientation: 'vertical'
+                size_hint_x: None
+                width: 0  # será alterado dinamicamente pelo código
+                opacity: 0  # inicialmente invisível
+                canvas.before:
+                    Color:
+                        rgba: get_color_from_hex(COR_SUPERFICIE)
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                
+                # Informações do usuário
+                UserBox:
+                    Label:
+                        id: user_name
+                        text: 'Usuário'
+                        font_size: dp(18)
+                        color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+                        bold: True
+                    
+                    Label:
+                        id: user_role
+                        text: 'Perfil: Administrador'
+                        font_size: dp(14)
+                        color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+                
+                # Opções de menu com ícones
+                ScrollView:
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: dp(5)
+                        spacing: dp(5)
+                        
+                        MenuButton:
+                            text: '🏠  Início'
+                            on_release: app.change_screen('home')
+                        
+                        MenuButton:
+                            text: '🐷  Animais'
+                            on_release: app.change_screen('animals')
+                        
+                        MenuButton:
+                            text: '📊  Reprodução'
+                            on_release: app.change_screen('reproduction')
+                        
+                        MenuButton:
+                            text: '⚖️  Peso e Idade'
+                            on_release: app.change_screen('weight')
+                        
+                        MenuButton:
+                            text: '🏥  Saúde'
+                            on_release: app.change_screen('health')
+                        
+                        MenuButton:
+                            text: '🔄  Sincronizar'
+                            on_release: app.open_sync_options()
+                        
+                        MenuButton:
+                            text: '⚙️  Configurações'
+                            on_release: app.change_screen('settings')
+                        
+                        MenuButton:
+                            text: '🚪  Sair'
+                            on_release: app.logout()
+            
+            # Área de conteúdo principal
+            ScreenManager:
+                id: screen_manager
+                
+                # Tela inicial
+                Screen:
+                    name: 'home'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(15)
+                        spacing: dp(15)
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex(COR_FUNDO)
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        
+                        # Título da página
+                        TitleLabel:
+                            text: 'Painel de Controle'
+                        
+                        # Status do rebanho e estatísticas gerais
+                        GridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            size_hint_y: None
+                            height: dp(200)
+                            
+                            # Card 1 - Total de animais
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: dp(15)
+                                canvas.before:
+                                    Color:
+                                        rgba: get_color_from_hex(COR_SUPERFICIE)
+                                    RoundedRectangle:
+                                        pos: self.pos
+                                        size: self.size
+                                        radius: [dp(10)]
+                                    # Borda colorida superior
+                                    Color:
+                                        rgba: get_color_from_hex("#6200EA")  # Roxo
+                                    Line:
+                                        points: [self.x, self.y + self.height - dp(2), self.x + self.width, self.y + self.height - dp(2)]
+                                        width: dp(4)
+                                
+                                Label:
+                                    text: 'Total de Animais'
+                                    color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+                                    font_size: dp(16)
+                                    size_hint_y: None
+                                    height: dp(30)
+                                
+                                Label:
+                                    id: total_animals
+                                    text: '0'
+                                    font_size: dp(30)
+                                    color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+                                    bold: True
+                            
+                            # Card 2 - Reprodução
+                            BoxLayout:
+                                orientation: 'vertical'
+                                padding: dp(15)
+                                canvas.before:
+                                    Color:
+                                        rgba: get_color_from_hex(COR_SUPERFICIE)
+                                    RoundedRectangle:
+                                        pos: self.pos
+                                        size: self.size
+                                        radius: [dp(10)]
+                                    # Borda colorida superior
+                                    Color:
+                                        rgba: get_color_from_hex("#FF6D00")  # Laranja
+                                    Line:
+                                        points: [self.x, self.y + self.height - dp(2), self.x + self.width, self.y + self.height - dp(2)]
+                                        width: dp(4)
+                                
+                                Label:
+                                    text: 'Animais em Cio'
+                                    color: get_color_from_hex(COR_TEXTO_SECUNDARIO)
+                                    font_size: dp(16)
+                                    size_hint_y: None
+                                    height: dp(30)
+                                
+                                Label:
+                                    id: animals_in_heat
+                                    text: '0'
+                                    font_size: dp(30)
+                                    color: get_color_from_hex(COR_TEXTO_PRIMARIO)
+                                    bold: True
+                        
+                        # Últimos registros
+                        SubtitleLabel:
+                            text: 'Últimos Eventos'
+                        
+                        # Lista de eventos recentes
+                        ScrollView:
+                            BoxLayout:
+                                id: events_container
+                                orientation: 'vertical'
+                                size_hint_y: None
+                                height: self.minimum_height
+                                spacing: dp(10)
+                                # Este container será preenchido dinamicamente com eventos
+                
+                # Tela de cadastro de animais
+                Screen:
+                    name: 'animals'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: dp(15)
+                        spacing: dp(15)
+                        canvas.before:
+                            Color:
+                                rgba: get_color_from_hex(COR_FUNDO)
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        
+                        # Título da página
+                        TitleLabel:
+                            text: 'Gerenciamento de Animais'
+                        
+                        # Barra de ações
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: None
+                            height: dp(56)
+                            spacing: dp(10)
+                            
+                            CustomButton:
+                                text: '+ Novo Animal'
+                                size_hint_x: 0.5
+                                on_release: app.open_animal_form()
+                            
+                            CustomTextInput:
+                                id: animal_search
+                                hint_text: 'Buscar...'
+                                size_hint_x: 0.5
+                                on_text: app.filter_animals(self.text)
+                        
+                        # Lista de animais
+                        ScrollView:
+                            BoxLayout:
+                                id: animals_container
+                                orientation: 'vertical'
+                                size_hint_y: None
+                                height: self.minimum_height
+                                spacing: dp(10)
+                                # Este container será preenchido dinamicamente com cards de animais
+
+# Definir o aplicativo principal
+<SuinoculturaApp>:
+    ScreenManager:
+        id: app_screen_manager
+        transition: FadeTransition()
+        
+        Screen:
+            name: 'login'
+            LoginScreen:
+        
+        Screen:
+            name: 'main'
+            MainScreen:

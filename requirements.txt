@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+matplotlib
+plotly
+trafilatura
+PyGithub
+requests
+firebase-admin
+firebase-admin
