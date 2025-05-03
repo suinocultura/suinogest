@@ -11,21 +11,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4  # Atualizado para versão mais recente
-
-      - name: Set up Docker
-        run: docker --version
+        uses: actions/checkout@v4
 
       - name: Build with Buildozer (Docker)
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/kivy_app_offline:/app \
             -w /app \
-            kivy/buildozer:stable \
+            kivyfactory/buildozer:latest \
             buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4  # Usa a versão mais recente
+        uses: actions/upload-artifact@v4
         with:
           name: suinogest-debug-apk
           path: kivy_app_offline/bin/*.apk
