@@ -18,7 +18,7 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}/kivy_app_offline:/app \
             -w /app \
-            kivyfactory/buildozer:latest \
+            docker.io/kivy/buildozer \
             buildozer android debug
 
       - name: Upload APK
