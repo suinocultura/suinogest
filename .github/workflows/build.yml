@@ -2,30 +2,30 @@ name: Build Kivy APK
 
 on:
   push:
-    branches: [main]   # troque se sua branch principal tiver outro nome
-  workflow_dispatch:   # permite disparar manualmente
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Clona o código
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4  # Atualizado para versão mais recente
 
-    # 2. Compila o APK usando o contêiner oficial do Buildozer
-    - name: Build with Buildozer (Docker)
-      run: |
-        docker run --rm \
-          -v ${{ github.workspace }}/kivy_app_offline:/app \
-          -w /app \
-          kivy/buildozer:stable \
-          buildozer android debug
+      - name: Set up Docker
+        run: docker --version
 
-    # 3. Faz upload do APK gerado
-    - name: Upload APK
-      uses: actions/upload-artifact@v2
-      with:
-        name: suinogest-debug-apk
-        path: kivy_app_offline/bin/*.apk
+      - name: Build with Buildozer (Docker)
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/kivy_app_offline:/app \
+            -w /app \
+            kivy/buildozer:stable \
+            buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4  # Usa a versão mais recente
+        with:
+          name: suinogest-debug-apk
+          path: kivy_app_offline/bin/*.apk
