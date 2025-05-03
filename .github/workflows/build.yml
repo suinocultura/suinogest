@@ -1,0 +1,26 @@
+name: Build Kivy APK
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Compilar APK com Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          workdir: kivy_app_offline
+          buildozer_version: stable
+
+      - name: Upload do APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: suinogest.apk
+          path: kivy_app_offline/bin/*.apk
